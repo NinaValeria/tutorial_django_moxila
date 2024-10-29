@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from datetime import date
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views import View 
+from django.views import View
+
+
 class MyView(PermissionRequiredMixin, View):
     permission_required = 'catalog.can_mark_returned'
     # O múltiples permisos

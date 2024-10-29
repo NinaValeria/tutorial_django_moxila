@@ -53,5 +53,11 @@ def display_genre(self):
     return ', '.join([ genre.name for genre in self.genre.all()[:3] ])
 display_genre.short_description = 'Genre'
 
+from datetime import date
 
+@property
+def is_overdue(self):
+    if self.due_back and date.today() > self.due_back:
+        return True
+    return False
 

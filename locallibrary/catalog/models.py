@@ -1,5 +1,14 @@
 from django.db import models
 from django.views import generic
+from django.contrib.auth.models import User
+# Importaciones
+from datetime import date
+@property
+def is_overdue(self):
+    if self.due_back and date.today() > self.due_back:
+        return True
+    return False
+
 class Genre(models.Model):
     """
     Modelo que representa un género literario (p. ej. ciencia ficción, poesía, etc.).
@@ -47,6 +56,8 @@ class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,help_text="ID unico para este libro particular en toda la biblioteca")
     book = models.ForeignKey('Book', on_delete=models.SET_NULL,null=True)
     imprint = models.CharField(max_length=200)
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
     due_back = models.DateField(null=True , blank=True)
     LOAN_STATUS = (
         ('m', 'Maintenence'),

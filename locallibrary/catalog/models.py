@@ -3,6 +3,18 @@ from django.views import generic
 from django.contrib.auth.models import User
 # Importaciones
 from datetime import date
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.views import View 
+class MyView(PermissionRequiredMixin, View):
+    permission_required = 'catalog.can_mark_returned'
+    # O múltiples permisos
+    permission_required = ('catalog.can_mark_returned', 'catalog.can_edit')
+    # Tenga en cuenta que 'catalog.can_edit' es solo un ejemplo:
+    # ¡la aplicación de catálogo no tiene dicho permiso!
+
+@permission_required('catalog.can_mark_returned')
+@permission_required('catalog.can_edit')
 @property
 def is_overdue(self):
     if self.due_back and date.today() > self.due_back:
@@ -73,7 +85,12 @@ class BookInstance(models.Model):
         String para representar el Objeto del Modelo
         """
            return '%s (%s)' % (self.id,self.book.title)
-        
+    class BookInstance(models.Model):
+        ...
+    class Meta:
+        ...
+        permissions = (("can_mark_returned", "Set book as returned"),)
+     
 class BookListView(generic.ListView):
     model = Book
 
